@@ -24,7 +24,7 @@ public class Batch {
         this.storageLocation = storageLocation;
     }
 
-    // adding new batch
+    // add new batch
     public Batch(int productId, int warehouseId,
                  String batchNumber, int quantity,
                  String expiryDate, String storageLocation) {
