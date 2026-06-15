@@ -1,0 +1,67 @@
+package application;
+
+public class Batch {
+
+    private int id;
+    private int productId;
+    private int warehouseId;
+    private String batchNumber;
+    private int quantity;
+    private String expiryDate;
+    private String storageLocation;
+
+    // reading from DB
+    public Batch(int id, int productId, int warehouseId,
+                 String batchNumber, int quantity,
+                 String expiryDate, String storageLocation) {
+
+        this.id = id;
+        this.productId = productId;
+        this.warehouseId = warehouseId;
+        this.batchNumber = batchNumber;
+        this.quantity = quantity;
+        this.expiryDate = expiryDate;
+        this.storageLocation = storageLocation;
+    }
+
+    // adding new batch
+    public Batch(int productId, int warehouseId,
+                 String batchNumber, int quantity,
+                 String expiryDate, String storageLocation) {
+
+        this.productId = productId;
+        this.warehouseId = warehouseId;
+        this.batchNumber = batchNumber;
+        this.quantity = quantity;
+        this.expiryDate = expiryDate;
+        this.storageLocation = storageLocation;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public int getWarehouseId() {
+        return warehouseId;
+    }
+
+    public String getBatchNumber() {
+        return batchNumber;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public String getExpiryDate() {
+        return expiryDate;
+    }
+
+    public String getStorageLocation() {
+        return storageLocation;
+    }
+}
