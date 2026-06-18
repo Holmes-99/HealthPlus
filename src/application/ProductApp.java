@@ -112,14 +112,14 @@ public class ProductApp extends Application {
         Button updateBatchButton = new Button("Update Batch");
         Button deleteBatchButton = new Button("Delete Batch");
         Button showBatchesButton = new Button("Show Batches");
-        
-        
+
+
 
         HBox batchButtons = new HBox(8, addBatchButton, updateBatchButton,
                 deleteBatchButton, showBatchesButton);
-        
+
         // ================= Supplier SECTION =================
-        
+
         TextField supplierIdField = new TextField();
         supplierIdField.setPromptText("Supplier ID (For Update/Delete Only)");
 
@@ -142,13 +142,13 @@ public class ProductApp extends Application {
         Button updateSupplierButton = new Button("Update Supplier");
         Button deleteSupplierButton = new Button("Delete Supplier");
         Button showSuppliersButton = new Button("Show Suppliers");
-        
-        
+
+
 
         HBox supplierButtons = new HBox(8, addSupplierButton, updateSupplierButton,
                 deleteSupplierButton, showSuppliersButton);
-        
-     // ================= CLIENT SECTION =================
+
+        // ================= CLIENT SECTION =================
         TextField clientIdField = new TextField();
         clientIdField.setPromptText("Client ID (For Update/Delete Only)");
 
@@ -174,8 +174,8 @@ public class ProductApp extends Application {
 
         HBox clientButtons = new HBox(8, addClientButton, updateClientButton,
                 deleteClientButton, showClientsButton);
-        
-     // ================= EMPLOYEE SECTION =================
+
+        // ================= EMPLOYEE SECTION =================
         TextField employeeIdField = new TextField();
         employeeIdField.setPromptText("Employee ID (For Update/Delete Only)");
 
@@ -204,8 +204,8 @@ public class ProductApp extends Application {
 
         HBox employeeButtons = new HBox(8, addEmployeeButton, updateEmployeeButton,
                 deleteEmployeeButton, showEmployeesButton);
-        
-     // ================= SUPPLIER PRODUCT SECTION =================
+
+        // ================= SUPPLIER PRODUCT SECTION =================
 
         TextField spSupplierIdField = new TextField();
         spSupplierIdField.setPromptText("Supplier ID");
@@ -226,7 +226,7 @@ public class ProductApp extends Application {
                 deleteSupplierProductButton,
                 showSupplierProductsButton
         );
-     // ================= PURCHASE ORDER SECTION =================
+        // ================= PURCHASE ORDER SECTION =================
 
         TextField poSupplierIdField = new TextField();
         poSupplierIdField.setPromptText("Supplier ID");
@@ -254,7 +254,7 @@ public class ProductApp extends Application {
                 addPOButton,
                 showPOButton
         );
-     // ================= PURCHASE ORDER ITEM SECTION =================
+        // ================= PURCHASE ORDER ITEM SECTION =================
 
         TextField poiPONumberField = new TextField();
         poiPONumberField.setPromptText("PO Number");
@@ -279,8 +279,8 @@ public class ProductApp extends Application {
                 addPOItemButton,
                 showPOItemsButton
         );
-        
-     // ================= SALE ORDER SECTION =================
+
+        // ================= SALE ORDER SECTION =================
         TextField soClientIdField = new TextField();
         soClientIdField.setPromptText("Client ID");
 
@@ -306,8 +306,8 @@ public class ProductApp extends Application {
         Button showSOButton = new Button("Show Sale Orders");
 
         HBox soButtons = new HBox(8, addSOButton, showSOButton);
-        
-     // ================= SALE ORDER ITEM SECTION =================
+
+        // ================= SALE ORDER ITEM SECTION =================
         TextField soiSaleOrderIdField = new TextField();
         soiSaleOrderIdField.setPromptText("Sale Order ID");
 
@@ -327,8 +327,8 @@ public class ProductApp extends Application {
         Button showSOItemsButton = new Button("Show Sale Order Items");
 
         HBox soItemButtons = new HBox(8, addSOItemButton, showSOItemsButton);
-        
-     // ================= PAYMENT SECTION =================
+
+        // ================= PAYMENT SECTION =================
         TextField paymentIdField = new TextField();
         paymentIdField.setPromptText("Payment ID (For Delete Only)");
 
@@ -355,8 +355,8 @@ public class ProductApp extends Application {
         Button showPaymentsButton = new Button("Show Payments");
 
         HBox paymentButtons = new HBox(8, addPaymentButton, deletePaymentButton, showPaymentsButton);
-        
-     // ================= REPORTS SECTION =================
+
+        // ================= REPORTS SECTION =================
         Button basicStatsButton = new Button("Basic Statistics");
         Button lowStockButton = new Button("Low Stock Products");
         Button expiringButton = new Button("Expiring Batches");
@@ -366,7 +366,7 @@ public class ProductApp extends Application {
 
         HBox reportButtons1 = new HBox(8, basicStatsButton, lowStockButton, expiringButton);
         HBox reportButtons2 = new HBox(8, stockValueButton, salesSummaryButton, paymentsSummaryButton);
-        
+
         // ================= CATEGORY ACTIONS =================
         addCategoryButton.setOnAction(e -> {
             String name = categoryNameField.getText().trim();
@@ -453,16 +453,16 @@ public class ProductApp extends Application {
                 boolean success = ProductDAO.addProduct(p);
 
                 if (success) {
-                	
-                	    showInfoAlert("Success", "Product added successfully.");
 
-                	    productIdField.clear();
-                	    nameField.clear();
-                	    descriptionField.clear();
-                	    priceField.clear();
-                	    reorderField.clear();
-                	    categoryField.clear();
-                	
+                    showInfoAlert("Success", "Product added successfully.");
+
+                    productIdField.clear();
+                    nameField.clear();
+                    descriptionField.clear();
+                    priceField.clear();
+                    reorderField.clear();
+                    categoryField.clear();
+
                 } else {
                     showErrorAlert("Database Error", "Product was not added. Check Category ID.");
                 }
@@ -646,7 +646,7 @@ public class ProductApp extends Application {
                     return;
                 }
 
-                Batch b = new Batch(productId, warehouseId, batchNumber, quantity, expiry, location);
+                Batch b = new Batch(productId, warehouseId, quantity, expiry, location);
                 boolean success = BatchDAO.addBatch(b);
 
                 if (success) {
@@ -686,10 +686,6 @@ public class ProductApp extends Application {
                         ? existing.getWarehouseId()
                         : Integer.parseInt(batchWarehouseIdField.getText().trim());
 
-                String batchNumber = batchNumberField.getText().trim().isEmpty()
-                        ? existing.getBatchNumber()
-                        : batchNumberField.getText().trim();
-
                 int quantity = batchQuantityField.getText().trim().isEmpty()
                         ? existing.getQuantity()
                         : Integer.parseInt(batchQuantityField.getText().trim());
@@ -702,7 +698,7 @@ public class ProductApp extends Application {
                         ? existing.getStorageLocation()
                         : batchLocationField.getText().trim();
 
-                BatchDAO.updateBatch(new Batch(id, productId, warehouseId, batchNumber, quantity, expiry, location));
+                BatchDAO.updateBatch(new Batch(id, productId, warehouseId, quantity, expiry, location));
                 showInfoAlert("Success", "Batch updated successfully.");
 
             } catch (Exception ex) {
@@ -733,16 +729,15 @@ public class ProductApp extends Application {
                         b.getId() + " | Product ID: " +
                                 b.getProductId() + " | Warehouse ID: " +
                                 b.getWarehouseId() + " | Batch: " +
-                                b.getBatchNumber() + " | Qty: " +
                                 b.getQuantity() + " | Expiry: " +
                                 b.getExpiryDate() + " | Location: " +
                                 b.getStorageLocation() + "\n"
                 );
             }
         });
-        
+
         // ================= Supplier ACTIONS =================
-        
+
         addSupplierButton.setOnAction(e -> {
             String name = supplierNameField.getText().trim();
             String contact = supplierContactField.getText().trim();
@@ -770,18 +765,18 @@ public class ProductApp extends Application {
                 showErrorAlert("Database Error", "Supplier was not added.");
             }
         });
-        
+
         showSuppliersButton.setOnAction(e -> {
             outputArea.clear();
 
             for (Supplier s : SupplierDAO.getAllSuppliers()) {
                 outputArea.appendText(
                         s.getId() + " | " +
-                        s.getName() + " | " +
-                        s.getContactPerson() + " | " +
-                        s.getPhone() + " | " +
-                        s.getEmail() + " | " +
-                        s.getCity() + "\n"
+                                s.getName() + " | " +
+                                s.getContactPerson() + " | " +
+                                s.getPhone() + " | " +
+                                s.getEmail() + " | " +
+                                s.getCity() + "\n"
                 );
             }
         });
@@ -808,7 +803,7 @@ public class ProductApp extends Application {
                 showErrorAlert("Input Error", "Please enter a valid Supplier ID.");
             }
         });
-        
+
         deleteSupplierButton.setOnAction(e -> {
             try {
                 int id = Integer.parseInt(supplierIdField.getText().trim());
@@ -825,8 +820,8 @@ public class ProductApp extends Application {
                 showErrorAlert("Input Error", "Please enter a valid Supplier ID.");
             }
         });
-        
-     // ================= CLIENT ACTIONS =================
+
+        // ================= CLIENT ACTIONS =================
         addClientButton.setOnAction(e -> {
             try {
                 String name = clientNameField.getText().trim();
@@ -866,11 +861,11 @@ public class ProductApp extends Application {
             for (Client c : ClientDAO.getAllClients()) {
                 outputArea.appendText(
                         c.getId() + " | " +
-                        c.getName() + " | " +
-                        c.getType() + " | " +
-                        c.getPhone() + " | " +
-                        c.getCity() + " | Credit Limit: " +
-                        c.getCreditLimit() + "\n"
+                                c.getName() + " | " +
+                                c.getType() + " | " +
+                                c.getPhone() + " | " +
+                                c.getCity() + " | Credit Limit: " +
+                                c.getCreditLimit() + "\n"
                 );
             }
         });
@@ -915,7 +910,7 @@ public class ProductApp extends Application {
                 showErrorAlert("Input Error", "Please enter a valid Client ID.");
             }
         });
-     // ================= EMPLOYEE ACTIONS =================
+        // ================= EMPLOYEE ACTIONS =================
         addEmployeeButton.setOnAction(e -> {
             try {
                 String firstName = employeeFirstNameField.getText().trim();
@@ -960,12 +955,12 @@ public class ProductApp extends Application {
             for (Employee emp : EmployeeDAO.getAllEmployees()) {
                 outputArea.appendText(
                         emp.getId() + " | " +
-                        emp.getFirstName() + " " +
-                        emp.getLastName() + " | " +
-                        emp.getRole() + " | " +
-                        emp.getHireDate() + " | " +
-                        emp.getPhone() + " | Salary: " +
-                        emp.getSalary() + "\n"
+                                emp.getFirstName() + " " +
+                                emp.getLastName() + " | " +
+                                emp.getRole() + " | " +
+                                emp.getHireDate() + " | " +
+                                emp.getPhone() + " | Salary: " +
+                                emp.getSalary() + "\n"
                 );
             }
         });
@@ -1040,7 +1035,7 @@ public class ProductApp extends Application {
                 showErrorAlert("Input Error", "Please enter a valid Employee ID.");
             }
         });
-        
+
         // ================= SupplierProduct ACTIONS =================
         addSupplierProductButton.setOnAction(e -> {
 
@@ -1100,12 +1095,12 @@ public class ProductApp extends Application {
 
                 outputArea.appendText(
                         "Supplier ID: "
-                        + sp.getSupplierId()
-                        + " | Product ID: "
-                        + sp.getProductId()
-                        + " | Unit Cost: "
-                        + sp.getUnitCost()
-                        + "\n"
+                                + sp.getSupplierId()
+                                + " | Product ID: "
+                                + sp.getProductId()
+                                + " | Unit Cost: "
+                                + sp.getUnitCost()
+                                + "\n"
                 );
             }
         });
@@ -1152,7 +1147,7 @@ public class ProductApp extends Application {
                 );
             }
         });
-        
+
         // ================= PurchaseOrder ACTIONS =================
         addPOButton.setOnAction(e -> {
 
@@ -1200,7 +1195,7 @@ public class ProductApp extends Application {
                 );
             }
         });
-        
+
         showPOButton.setOnAction(e -> {
 
             outputArea.clear();
@@ -1210,22 +1205,22 @@ public class ProductApp extends Application {
 
                 outputArea.appendText(
                         "PO#: "
-                        + po.getPoNumber()
-                        + " | Supplier: "
-                        + po.getSupplierId()
-                        + " | Employee: "
-                        + po.getEmployeeId()
-                        + " | Status: "
-                        + po.getStatus()
-                        + " | Total: "
-                        + po.getTotalAmount()
-                        + "\n"
+                                + po.getPoNumber()
+                                + " | Supplier: "
+                                + po.getSupplierId()
+                                + " | Employee: "
+                                + po.getEmployeeId()
+                                + " | Status: "
+                                + po.getStatus()
+                                + " | Total: "
+                                + po.getTotalAmount()
+                                + "\n"
                 );
             }
         });
-        
+
         // ================= PurchaseOrder Item ACTIONS =================
-        
+
         addPOItemButton.setOnAction(e -> {
 
             try {
@@ -1281,7 +1276,7 @@ public class ProductApp extends Application {
                 );
             }
         });
-        
+
         showPOItemsButton.setOnAction(e -> {
 
             outputArea.clear();
@@ -1291,19 +1286,19 @@ public class ProductApp extends Application {
 
                 outputArea.appendText(
                         "PO#: "
-                        + item.getPoNumber()
-                        + " | Product: "
-                        + item.getProductId()
-                        + " | Qty: "
-                        + item.getQtyOrdered()
-                        + " | Cost: "
-                        + item.getUnitCost()
-                        + "\n"
+                                + item.getPoNumber()
+                                + " | Product: "
+                                + item.getProductId()
+                                + " | Qty: "
+                                + item.getQtyOrdered()
+                                + " | Cost: "
+                                + item.getUnitCost()
+                                + "\n"
                 );
             }
         });
-        
-     // ================= SALE ORDER ACTIONS =================
+
+        // ================= SALE ORDER ACTIONS =================
         addSOButton.setOnAction(e -> {
             try {
                 SaleOrder so = new SaleOrder(
@@ -1352,8 +1347,8 @@ public class ProductApp extends Application {
                 );
             }
         });
-        
-     // ================= SALE ORDER ITEM ACTIONS =================
+
+        // ================= SALE ORDER ITEM ACTIONS =================
         addSOItemButton.setOnAction(e -> {
             try {
                 SaleOrderItem item = new SaleOrderItem(
@@ -1397,8 +1392,8 @@ public class ProductApp extends Application {
                 );
             }
         });
-        
-     // ================= PAYMENT ACTIONS =================
+
+        // ================= PAYMENT ACTIONS =================
         addPaymentButton.setOnAction(e -> {
             try {
                 Integer saleOrderId = paymentSaleOrderIdField.getText().trim().isEmpty()
@@ -1476,8 +1471,8 @@ public class ProductApp extends Application {
                 showErrorAlert("Input Error", "Please enter a valid Payment ID.");
             }
         });
-        
-     // ================= REPORT ACTIONS =================
+
+        // ================= REPORT ACTIONS =================
         basicStatsButton.setOnAction(e -> {
             outputArea.clear();
             outputArea.setText(ReportDAO.getBasicStatistics());
@@ -1546,7 +1541,6 @@ public class ProductApp extends Application {
                 batchIdField,
                 batchProductIdField,
                 batchWarehouseIdField,
-                batchNumberField,
                 batchQuantityField,
                 batchExpiryField,
                 batchLocationField,
@@ -1562,7 +1556,7 @@ public class ProductApp extends Application {
                 supplierEmailField,
                 supplierCityField,
                 supplierButtons,
-                
+
                 new Separator(),
 
                 new Label("Client Section"),
@@ -1573,7 +1567,7 @@ public class ProductApp extends Application {
                 clientCityField,
                 clientCreditField,
                 clientButtons,
-                
+
                 new Separator(),
 
                 new Label("Employee Section"),
@@ -1585,7 +1579,7 @@ public class ProductApp extends Application {
                 employeePhoneField,
                 employeeSalaryField,
                 employeeButtons,
-                
+
                 new Separator(),
 
                 new Label("Supplier Product Section"),
@@ -1595,7 +1589,7 @@ public class ProductApp extends Application {
                 spUnitCostField,
 
                 supplierProductButtons,
-                
+
                 new Separator(),
 
                 new Label("Purchase Order Section"),
@@ -1620,7 +1614,7 @@ public class ProductApp extends Application {
                 poiReceivedField,
 
                 poItemButtons,
-                
+
                 new Separator(),
 
                 new Label("Sale Order Section"),
@@ -1642,7 +1636,7 @@ public class ProductApp extends Application {
                 soiUnitPriceField,
                 soiDiscountField,
                 soItemButtons,
-                
+
                 new Separator(),
 
                 new Label("Payment Section"),
@@ -1654,7 +1648,7 @@ public class ProductApp extends Application {
                 paymentMethodField,
                 paymentDirectionField,
                 paymentButtons,
-                
+
                 new Separator(),
 
                 new Label("Reports and Statistics Section"),

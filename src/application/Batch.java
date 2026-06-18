@@ -5,33 +5,28 @@ public class Batch {
     private int id;
     private int productId;
     private int warehouseId;
-    private String batchNumber;
     private int quantity;
     private String expiryDate;
     private String storageLocation;
 
     // reading from DB
-    public Batch(int id, int productId, int warehouseId,
-                 String batchNumber, int quantity,
+    public Batch(int id, int productId, int warehouseId, int quantity,
                  String expiryDate, String storageLocation) {
 
         this.id = id;
         this.productId = productId;
         this.warehouseId = warehouseId;
-        this.batchNumber = batchNumber;
         this.quantity = quantity;
         this.expiryDate = expiryDate;
         this.storageLocation = storageLocation;
     }
 
-    // add new batch
-    public Batch(int productId, int warehouseId,
-                 String batchNumber, int quantity,
+    // adding new batch
+    public Batch(int productId, int warehouseId, int quantity,
                  String expiryDate, String storageLocation) {
 
         this.productId = productId;
         this.warehouseId = warehouseId;
-        this.batchNumber = batchNumber;
         this.quantity = quantity;
         this.expiryDate = expiryDate;
         this.storageLocation = storageLocation;
@@ -47,10 +42,6 @@ public class Batch {
 
     public int getWarehouseId() {
         return warehouseId;
-    }
-
-    public String getBatchNumber() {
-        return batchNumber;
     }
 
     public int getQuantity() {

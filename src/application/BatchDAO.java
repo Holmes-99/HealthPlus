@@ -23,7 +23,6 @@ public class BatchDAO {
                         rs.getInt("BatchID"),
                         rs.getInt("ProductID"),
                         rs.getInt("WarehouseID"),
-                        rs.getString("BatchNumber"),
                         rs.getInt("QtyInStock"),
                         rs.getString("ExpiryDate"),
                         rs.getString("StorageLocation")
@@ -48,14 +47,13 @@ public class BatchDAO {
 
             String sql =
                     "INSERT INTO Batch " +
-                    "(ProductID, WarehouseID, BatchNumber, QtyInStock, ExpiryDate, StorageLocation) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+                            "(ProductID, WarehouseID, BatchNumber, QtyInStock, ExpiryDate, StorageLocation) " +
+                            "VALUES (?, ?, ?, ?, ?, ?)";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, b.getProductId());
             stmt.setInt(2, b.getWarehouseId());
-            stmt.setString(3, b.getBatchNumber());
             stmt.setInt(4, b.getQuantity());
             stmt.setString(5, b.getExpiryDate());
             stmt.setString(6, b.getStorageLocation());
@@ -79,19 +77,17 @@ public class BatchDAO {
 
             String sql =
                     "UPDATE Batch SET " +
-                    "ProductID = ?, " +
-                    "WarehouseID = ?, " +
-                    "BatchNumber = ?, " +
-                    "QtyInStock = ?, " +
-                    "ExpiryDate = ?, " +
-                    "StorageLocation = ? " +
-                    "WHERE BatchID = ?";
+                            "ProductID = ?, " +
+                            "WarehouseID = ?, " +
+                            "QtyInStock = ?, " +
+                            "ExpiryDate = ?, " +
+                            "StorageLocation = ? " +
+                            "WHERE BatchID = ?";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, b.getProductId());
             stmt.setInt(2, b.getWarehouseId());
-            stmt.setString(3, b.getBatchNumber());
             stmt.setInt(4, b.getQuantity());
             stmt.setString(5, b.getExpiryDate());
             stmt.setString(6, b.getStorageLocation());
@@ -146,7 +142,6 @@ public class BatchDAO {
                         rs.getInt("BatchID"),
                         rs.getInt("ProductID"),
                         rs.getInt("WarehouseID"),
-                        rs.getString("BatchNumber"),
                         rs.getInt("QtyInStock"),
                         rs.getString("ExpiryDate"),
                         rs.getString("StorageLocation")
