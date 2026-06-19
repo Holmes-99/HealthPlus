@@ -25,12 +25,12 @@ public class CategoryDAO {
             }
             conn.close();
         }
-      catch (Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
         return list;
     }
-//add category
+    //add category
     public static void addCategory(Category c) {
         try {
             Connection conn=DBConnection.connect();
@@ -64,22 +64,22 @@ public class CategoryDAO {
             stmt.executeUpdate();
             conn.close();
         }
-       catch (Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-//delete by id
-  //delete category - remove supplier links first then delete
+    //delete by id
+    //delete category - remove supplier links first then delete
     public static boolean deleteCategory(int id) {
-    	System.out.println("deleteCategory called with id: " + id);
+        System.out.println("deleteCategory called with id: " + id);
         try {
             Connection conn = DBConnection.connect();
-            
+
             // collect product IDs first into a list
             ArrayList<Integer> productIds = new ArrayList<>();
             PreparedStatement s1 = conn.prepareStatement(
-                "SELECT ProductID FROM Product WHERE CategoryID = ?");
+                    "SELECT ProductID FROM Product WHERE CategoryID = ?");
             s1.setInt(1, id);
             ResultSet rs = s1.executeQuery();
             while (rs.next()) {
@@ -87,30 +87,30 @@ public class CategoryDAO {
             }
             rs.close();
             s1.close();
-            
+
             // now delete supplier links for each product
             for (int pid : productIds) {
                 PreparedStatement s2 = conn.prepareStatement(
-                    "DELETE FROM SupplierProduct WHERE ProductID = ?");
+                        "DELETE FROM SupplierProduct WHERE ProductID = ?");
                 s2.setInt(1, pid);
                 s2.executeUpdate();
                 s2.close();
 
                 PreparedStatement s3 = conn.prepareStatement(
-                    "DELETE FROM Batch WHERE ProductID = ?");
+                        "DELETE FROM Batch WHERE ProductID = ?");
                 s3.setInt(1, pid);
                 s3.executeUpdate();
                 s3.close();
             }
-            
+
             // now delete the category - cascade handles products
             PreparedStatement stmt = conn.prepareStatement(
-                "DELETE FROM Category WHERE CategoryID = ?");
+                    "DELETE FROM Category WHERE CategoryID = ?");
             stmt.setInt(1, id);
             int rows = stmt.executeUpdate();
             stmt.close();
             conn.close();
-            
+
             return rows > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,16 +126,16 @@ public class CategoryDAO {
             ResultSet rs =stmt.executeQuery();
             if (rs.next()){
                 Category c =new Category(
-                    rs.getInt("CategoryID"),
-                    rs.getString("Name"),
-                    rs.getString("Description")
+                        rs.getInt("CategoryID"),
+                        rs.getString("Name"),
+                        rs.getString("Description")
                 );
                 conn.close();
                 return c;
             }
             conn.close();
         }
-      catch (Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
         return null;

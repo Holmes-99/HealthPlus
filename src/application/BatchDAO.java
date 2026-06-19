@@ -47,16 +47,16 @@ public class BatchDAO {
 
             String sql =
                     "INSERT INTO Batch " +
-                            "(ProductID, WarehouseID, BatchNumber, QtyInStock, ExpiryDate, StorageLocation) " +
-                            "VALUES (?, ?, ?, ?, ?, ?)";
+                            "(ProductID, WarehouseID, QtyInStock, ExpiryDate, StorageLocation) " +
+                            "VALUES (?, ?, ?, ?, ?)";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, b.getProductId());
             stmt.setInt(2, b.getWarehouseId());
-            stmt.setInt(4, b.getQuantity());
-            stmt.setString(5, b.getExpiryDate());
-            stmt.setString(6, b.getStorageLocation());
+            stmt.setInt(3, b.getQuantity());
+            stmt.setString(4, b.getExpiryDate());
+            stmt.setString(5, b.getStorageLocation());
 
             int rows = stmt.executeUpdate();
 
@@ -88,10 +88,10 @@ public class BatchDAO {
 
             stmt.setInt(1, b.getProductId());
             stmt.setInt(2, b.getWarehouseId());
-            stmt.setInt(4, b.getQuantity());
-            stmt.setString(5, b.getExpiryDate());
-            stmt.setString(6, b.getStorageLocation());
-            stmt.setInt(7, b.getId());
+            stmt.setInt(3, b.getQuantity());
+            stmt.setString(4, b.getExpiryDate());
+            stmt.setString(5, b.getStorageLocation());
+            stmt.setInt(6, b.getId());
 
             stmt.executeUpdate();
 

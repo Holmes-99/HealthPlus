@@ -38,7 +38,7 @@ public class ReportDAO {
 
             rs = stmt.executeQuery(
                     "SELECT SUM(b.QtyInStock * p.UnitPrice) AS value " +
-                    "FROM Batch b JOIN Product p ON b.ProductID = p.ProductID"
+                            "FROM Batch b JOIN Product p ON b.ProductID = p.ProductID"
             );
             if (rs.next()) sb.append("Total Inventory Value: ").append(rs.getDouble("value")).append("\n");
 
@@ -60,9 +60,9 @@ public class ReportDAO {
 
             String sql =
                     "SELECT p.ProductID, p.ProductName, SUM(b.QtyInStock) AS TotalQty, p.ReorderLevel " +
-                    "FROM Product p JOIN Batch b ON p.ProductID = b.ProductID " +
-                    "GROUP BY p.ProductID, p.ProductName, p.ReorderLevel " +
-                    "HAVING TotalQty < p.ReorderLevel";
+                            "FROM Product p LEFT JOIN Batch b ON p.ProductID = b.ProductID " +
+                            "GROUP BY p.ProductID, p.ProductName, p.ReorderLevel " +
+                            "HAVING TotalQty < p.ReorderLevel";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -93,10 +93,10 @@ public class ReportDAO {
             Connection conn = DBConnection.connect();
 
             String sql =
-                    "SELECT b.BatchID, p.ProductName, b.BatchNumber, b.ExpiryDate, b.QtyInStock " +
-                    "FROM Batch b JOIN Product p ON b.ProductID = p.ProductID " +
-                    "WHERE b.ExpiryDate <= DATE_ADD(CURDATE(), INTERVAL 30 DAY) " +
-                    "ORDER BY b.ExpiryDate";
+                    "SELECT b.BatchID, p.ProductName, b.ExpiryDate, b.QtyInStock " +
+                            "FROM Batch b JOIN Product p ON b.ProductID = p.ProductID " +
+                            "WHERE b.ExpiryDate <= DATE_ADD(CURDATE(), INTERVAL 30 DAY) " +
+                            "ORDER BY b.ExpiryDate";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -106,7 +106,6 @@ public class ReportDAO {
             while (rs.next()) {
                 sb.append("Batch ID: ").append(rs.getInt("BatchID"))
                         .append(" | Product: ").append(rs.getString("ProductName"))
-                        .append(" | Batch: ").append(rs.getString("BatchNumber"))
                         .append(" | Expiry: ").append(rs.getString("ExpiryDate"))
                         .append(" | Qty: ").append(rs.getInt("QtyInStock"))
                         .append("\n");
@@ -121,7 +120,6 @@ public class ReportDAO {
 
         return sb.toString();
     }
-
     public static String getStockValueByCategory() {
         StringBuilder sb = new StringBuilder();
 
@@ -129,12 +127,13 @@ public class ReportDAO {
             Connection conn = DBConnection.connect();
 
             String sql =
-                    "SELECT c.Name AS CategoryName, SUM(b.QtyInStock * p.UnitPrice) AS StockValue " +
-                    "FROM Category c " +
-                    "JOIN Product p ON c.CategoryID = p.CategoryID " +
-                    "JOIN Batch b ON p.ProductID = b.ProductID " +
-                    "GROUP BY c.CategoryID, c.Name " +
-                    "ORDER BY StockValue DESC";
+                    "SELECT c.Name AS CategoryName, " +
+                            "COALESCE(SUM(b.QtyInStock * p.UnitPrice),0) AS StockValue " +
+                            "FROM Category c " +
+                            "LEFT JOIN Product p ON c.CategoryID = p.CategoryID " +
+                            "LEFT JOIN Batch b ON p.ProductID = b.ProductID " +
+                            "GROUP BY c.CategoryID, c.Name " +
+                            "ORDER BY StockValue DESC";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -166,7 +165,7 @@ public class ReportDAO {
 
             String sql =
                     "SELECT COUNT(*) AS NumOrders, SUM(TotalAmount) AS TotalRevenue, AVG(TotalAmount) AS AvgOrder " +
-                    "FROM SaleOrder";
+                            "FROM SaleOrder";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -197,7 +196,7 @@ public class ReportDAO {
 
             String sql =
                     "SELECT Direction, SUM(Amount) AS TotalAmount " +
-                    "FROM Payment GROUP BY Direction";
+                            "FROM Payment GROUP BY Direction";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -216,6 +215,51 @@ public class ReportDAO {
         } catch (Exception e) {
             e.printStackTrace();
             sb.append("Error loading payments summary.");
+        }
+
+        return sb.toString();
+    }
+    public static String getWarehouseCapacityReport() {
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            Connection conn = DBConnection.connect();
+
+            String sql =
+                    "SELECT w.WarehouseName, w.Capacity, " +
+                            "COALESCE(SUM(b.QtyInStock), 0) AS CurrentStock, " +
+                            "(w.Capacity - COALESCE(SUM(b.QtyInStock), 0)) AS RemainingCapacity, " +
+                            "CASE " +
+                            "WHEN w.Capacity = 0 THEN 0 " +
+                            "ELSE (COALESCE(SUM(b.QtyInStock), 0) / w.Capacity) * 100 " +
+                            "END AS UtilizationPercent " +
+                            "FROM Warehouse w " +
+                            "LEFT JOIN Batch b ON w.WarehouseID = b.WarehouseID " +
+                            "GROUP BY w.WarehouseID, w.WarehouseName, w.Capacity";
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            sb.append("===== WAREHOUSE CAPACITY REPORT =====\n\n");
+
+            while (rs.next()) {
+                sb.append(rs.getString("WarehouseName"))
+                        .append(" | Capacity: ")
+                        .append(rs.getInt("Capacity"))
+                        .append(" | Current Stock: ")
+                        .append(rs.getInt("CurrentStock"))
+                        .append(" | Remaining: ")
+                        .append(rs.getInt("RemainingCapacity"))
+                        .append(" | Utilization: ")
+                        .append(String.format("%.2f", rs.getDouble("UtilizationPercent")))
+                        .append("%\n");
+            }
+
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            sb.append("Error loading warehouse capacity report.");
         }
 
         return sb.toString();

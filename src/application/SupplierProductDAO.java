@@ -44,8 +44,8 @@ public class SupplierProductDAO {
 
             String sql =
                     "INSERT INTO SupplierProduct " +
-                    "(SupplierID, ProductID, UnitCost) " +
-                    "VALUES (?, ?, ?)";
+                            "(SupplierID, ProductID, UnitCost) " +
+                            "VALUES (?, ?, ?)";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -72,12 +72,37 @@ public class SupplierProductDAO {
 
             String sql =
                     "DELETE FROM SupplierProduct " +
-                    "WHERE SupplierID=? AND ProductID=?";
+                            "WHERE SupplierID=? AND ProductID=?";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, supplierId);
             stmt.setInt(2, productId);
+
+            int rows = stmt.executeUpdate();
+
+            conn.close();
+
+            return rows > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public static boolean updateSupplierProduct(SupplierProduct sp) {
+        try {
+            Connection conn = DBConnection.connect();
+
+            String sql =
+                    "UPDATE SupplierProduct SET UnitCost = ? " +
+                            "WHERE SupplierID = ? AND ProductID = ?";
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setDouble(1, sp.getUnitCost());
+            stmt.setInt(2, sp.getSupplierId());
+            stmt.setInt(3, sp.getProductId());
 
             int rows = stmt.executeUpdate();
 

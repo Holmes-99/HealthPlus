@@ -150,4 +150,23 @@ public class ProductDAO {
 
         return null;
     }
+    public static boolean productExists(int id) {
+        try {
+            Connection conn = DBConnection.connect();
+
+            String sql = "SELECT ProductID FROM Product WHERE ProductID = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+            boolean exists = rs.next();
+
+            conn.close();
+            return exists;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

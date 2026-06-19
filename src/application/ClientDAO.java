@@ -47,8 +47,8 @@ public class ClientDAO {
 
             String sql =
                     "INSERT INTO Client " +
-                    "(ClientName, ClientType, Phone, City, CreditLimit) " +
-                    "VALUES (?, ?, ?, ?, ?)";
+                            "(ClientName, ClientType, Phone, City, CreditLimit) " +
+                            "VALUES (?, ?, ?, ?, ?)";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -77,12 +77,12 @@ public class ClientDAO {
 
             String sql =
                     "UPDATE Client SET " +
-                    "ClientName = ?, " +
-                    "ClientType = ?, " +
-                    "Phone = ?, " +
-                    "City = ?, " +
-                    "CreditLimit = ? " +
-                    "WHERE ClientID = ?";
+                            "ClientName = ?, " +
+                            "ClientType = ?, " +
+                            "Phone = ?, " +
+                            "City = ?, " +
+                            "CreditLimit = ? " +
+                            "WHERE ClientID = ?";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 

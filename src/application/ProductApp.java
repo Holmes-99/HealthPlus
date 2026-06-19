@@ -78,6 +78,9 @@ public class ProductApp extends Application {
         TextField warehousePhoneField = new TextField();
         warehousePhoneField.setPromptText("Warehouse Phone");
 
+        TextField warehouseCapacityField = new TextField();
+        warehouseCapacityField.setPromptText("Capacity");
+
         Button addWarehouseButton = new Button("Add Warehouse");
         Button updateWarehouseButton = new Button("Update Warehouse");
         Button deleteWarehouseButton = new Button("Delete Warehouse");
@@ -219,10 +222,12 @@ public class ProductApp extends Application {
         Button addSupplierProductButton = new Button("Link Supplier To Product");
         Button deleteSupplierProductButton = new Button("Remove Link");
         Button showSupplierProductsButton = new Button("Show Links");
+        Button updateSupplierProductButton = new Button("Update Unit Cost");
 
         HBox supplierProductButtons = new HBox(
                 8,
                 addSupplierProductButton,
+                updateSupplierProductButton,
                 deleteSupplierProductButton,
                 showSupplierProductsButton
         );
@@ -356,6 +361,29 @@ public class ProductApp extends Application {
 
         HBox paymentButtons = new HBox(8, addPaymentButton, deletePaymentButton, showPaymentsButton);
 
+
+        // ================= Inventory Transaction SECTION =================
+
+        TextField txnBatchIdField = new TextField();
+        txnBatchIdField.setPromptText("Batch ID");
+
+        TextField txnEmployeeIdField = new TextField();
+        txnEmployeeIdField.setPromptText("Employee ID");
+
+        TextField txnTypeField = new TextField();
+        txnTypeField.setPromptText("Receipt / Dispatch / Adjustment");
+
+        TextField txnQuantityField = new TextField();
+        txnQuantityField.setPromptText("Quantity");
+
+        TextField txnReferenceIdField = new TextField();
+        txnReferenceIdField.setPromptText("Reference ID");
+
+        Button addTxnButton = new Button("Add Inventory Transaction");
+        Button showTxnButton = new Button("Show Inventory Transactions");
+
+        HBox txnButtons = new HBox(8, addTxnButton, showTxnButton);
+
         // ================= REPORTS SECTION =================
         Button basicStatsButton = new Button("Basic Statistics");
         Button lowStockButton = new Button("Low Stock Products");
@@ -363,9 +391,10 @@ public class ProductApp extends Application {
         Button stockValueButton = new Button("Stock Value by Category");
         Button salesSummaryButton = new Button("Sales Summary");
         Button paymentsSummaryButton = new Button("Payments Summary");
+        Button warehouseCapacityButton = new Button("Warehouse Capacity");
 
         HBox reportButtons1 = new HBox(8, basicStatsButton, lowStockButton, expiringButton);
-        HBox reportButtons2 = new HBox(8, stockValueButton, salesSummaryButton, paymentsSummaryButton);
+        HBox reportButtons2 = new HBox(8, stockValueButton, salesSummaryButton, paymentsSummaryButton, warehouseCapacityButton);
 
         // ================= CATEGORY ACTIONS =================
         addCategoryButton.setOnAction(e -> {
@@ -404,7 +433,11 @@ public class ProductApp extends Application {
                         : categoryDescField.getText().trim();
 
                 CategoryDAO.updateCategory(new Category(id, name, desc));
+
                 showInfoAlert("Success", "Category updated successfully.");
+                categoryIdField.clear();
+                categoryNameField.clear();
+                categoryDescField.clear();
 
             } catch (Exception ex) {
                 showErrorAlert("Input Error", "Please enter a valid Category ID.");
@@ -418,6 +451,9 @@ public class ProductApp extends Application {
 
                 if (success) {
                     showInfoAlert("Success", "Category deleted successfully.");
+                    categoryIdField.clear();
+                    categoryNameField.clear();
+                    categoryDescField.clear();
                 } else {
                     showErrorAlert("Delete Failed", "Category not found.");
                 }
@@ -504,6 +540,12 @@ public class ProductApp extends Application {
 
                 ProductDAO.updateProduct(new Product(id, name, desc, price, reorder, categoryId));
                 showInfoAlert("Success", "Product updated successfully.");
+                productIdField.clear();
+                nameField.clear();
+                descriptionField.clear();
+                priceField.clear();
+                reorderField.clear();
+                categoryIdField.clear();
 
             } catch (Exception ex) {
                 showErrorAlert("Input Error", "Please enter valid product values.");
@@ -517,6 +559,12 @@ public class ProductApp extends Application {
 
                 if (success) {
                     showInfoAlert("Success", "Product deleted successfully.");
+                    productIdField.clear();
+                    nameField.clear();
+                    descriptionField.clear();
+                    priceField.clear();
+                    reorderField.clear();
+                    categoryField.clear();
                 } else {
                     showErrorAlert("Delete Failed", "Product not found.");
                 }
@@ -546,13 +594,14 @@ public class ProductApp extends Application {
             String address = warehouseAddressField.getText().trim();
             String city = warehouseCityField.getText().trim();
             String phone = warehousePhoneField.getText().trim();
+            int capacity = Integer.parseInt(warehouseCapacityField.getText().trim());
 
             if (name.isEmpty() || address.isEmpty() || city.isEmpty() || phone.isEmpty()) {
                 showErrorAlert("Validation Error", "All warehouse fields must be filled.");
                 return;
             }
 
-            boolean success = WarehouseDAO.addWarehouse(new Warehouse(name, address, city, phone));
+            boolean success = WarehouseDAO.addWarehouse(new Warehouse(name, address, city, phone, capacity));
 
             if (success) {
                 showInfoAlert("Success", "Warehouse added successfully.");
@@ -562,6 +611,8 @@ public class ProductApp extends Application {
                 warehouseAddressField.clear();
                 warehouseCityField.clear();
                 warehousePhoneField.clear();
+                warehouseCapacityField.clear();
+
             } else {
                 showErrorAlert("Database Error", "Warehouse was not added.");
             }
@@ -592,9 +643,17 @@ public class ProductApp extends Application {
                 String phone = warehousePhoneField.getText().trim().isEmpty()
                         ? existing.getPhone()
                         : warehousePhoneField.getText().trim();
+                int capacity = Integer.parseInt(warehouseCapacityField.getText().trim()) ;
 
-                WarehouseDAO.updateWarehouse(new Warehouse(id, name, address, city, phone));
+
+                WarehouseDAO.updateWarehouse(new Warehouse(id, name, address, city, phone, capacity));
                 showInfoAlert("Success", "Warehouse updated successfully.");
+                warehouseIdField.clear();
+                warehouseNameField.clear();
+                warehouseAddressField.clear();
+                warehouseCityField.clear();
+                warehousePhoneField.clear();
+                warehouseCapacityField.clear();
 
             } catch (Exception ex) {
                 showErrorAlert("Input Error", "Please enter a valid Warehouse ID.");
@@ -602,18 +661,21 @@ public class ProductApp extends Application {
         });
 
         deleteWarehouseButton.setOnAction(e -> {
-            try {
-                int id = Integer.parseInt(warehouseIdField.getText().trim());
-                boolean success = WarehouseDAO.deleteWarehouse(id);
+            int id = Integer.parseInt(warehouseIdField.getText());
 
-                if (success) {
-                    showInfoAlert("Success", "Warehouse deleted successfully.");
-                } else {
-                    showErrorAlert("Delete Failed", "Warehouse not found or linked to batches.");
-                }
+            boolean success = WarehouseDAO.deleteWarehouse(id);
 
-            } catch (Exception ex) {
-                showErrorAlert("Input Error", "Please enter a valid Warehouse ID.");
+            if(success) {
+
+                warehouseIdField.clear();
+                warehouseNameField.clear();
+                warehouseAddressField.clear();
+                warehouseCityField.clear();
+                warehousePhoneField.clear();
+                warehouseCapacityField.clear();
+
+
+                outputArea.setText("Warehouse deleted successfully!");
             }
         });
 
@@ -625,7 +687,8 @@ public class ProductApp extends Application {
                                 w.getName() + " | " +
                                 w.getAddress() + " | " +
                                 w.getCity() + " | " +
-                                w.getPhone() + "\n"
+                                w.getPhone() + "\n"+
+                                w.getCapacity() + "\n"
                 );
             }
         });
@@ -640,11 +703,34 @@ public class ProductApp extends Application {
                 String expiry = batchExpiryField.getText().trim();
                 String location = batchLocationField.getText().trim();
 
-                if (batchNumber.isEmpty() || expiry.isEmpty() || location.isEmpty()
+                if (expiry.isEmpty() || location.isEmpty()
                         || productId <= 0 || warehouseId <= 0 || quantity < 0) {
                     showErrorAlert("Validation Error", "Please enter valid batch data.");
                     return;
                 }
+                boolean enoughCapacity = WarehouseDAO.hasEnoughCapacity(warehouseId, quantity);
+
+                if (!ProductDAO.productExists(productId)) {
+                    showErrorAlert("Invalid Product ID", "The entered Product ID does not exist.");
+                    return;
+                }
+
+                if (!WarehouseDAO.warehouseExists(warehouseId)) {
+                    showErrorAlert("Invalid Warehouse ID", "The entered Warehouse ID does not exist.");
+                    return;
+                }
+
+                if (!WarehouseDAO.hasEnoughCapacity(warehouseId, quantity)) {
+                    showErrorAlert("Capacity Error", "Cannot add this batch. Warehouse capacity would be exceeded.");
+                    return;
+                }
+                if (!location.matches("[A-Za-z]-\\d+")) {
+                    showErrorAlert("Invalid Location",
+                            "Location must be like A-1, a-1, B-3, etc.");
+                    return;
+                }
+
+
 
                 Batch b = new Batch(productId, warehouseId, quantity, expiry, location);
                 boolean success = BatchDAO.addBatch(b);
@@ -660,7 +746,7 @@ public class ProductApp extends Application {
                     batchExpiryField.clear();
                     batchLocationField.clear();
                 } else {
-                    showErrorAlert("Database Error", "Batch was not added. Check Product ID and Warehouse ID.");
+                    showErrorAlert("Database Error", "Batch was not added. Check entered data.");
                 }
 
             } catch (Exception ex) {
@@ -700,6 +786,12 @@ public class ProductApp extends Application {
 
                 BatchDAO.updateBatch(new Batch(id, productId, warehouseId, quantity, expiry, location));
                 showInfoAlert("Success", "Batch updated successfully.");
+                batchIdField.clear();
+                batchProductIdField.clear();
+                batchWarehouseIdField.clear();
+                batchQuantityField.clear();
+                batchExpiryField.clear();
+                batchLocationField.clear();
 
             } catch (Exception ex) {
                 showErrorAlert("Input Error", "Please enter valid batch values.");
@@ -713,6 +805,12 @@ public class ProductApp extends Application {
 
                 if (success) {
                     showInfoAlert("Success", "Batch deleted successfully.");
+                    batchIdField.clear();
+                    batchProductIdField.clear();
+                    batchWarehouseIdField.clear();
+                    batchQuantityField.clear();
+                    batchExpiryField.clear();
+                    batchLocationField.clear();
                 } else {
                     showErrorAlert("Delete Failed", "Batch not found.");
                 }
@@ -798,6 +896,12 @@ public class ProductApp extends Application {
 
                 SupplierDAO.updateSupplier(new Supplier(id, name, contact, phone, email, city));
                 showInfoAlert("Success", "Supplier updated successfully.");
+                supplierIdField.clear();
+                supplierNameField.clear();
+                supplierContactField.clear();
+                supplierPhoneField.clear();
+                supplierEmailField.clear();
+                supplierCityField.clear();
 
             } catch (Exception ex) {
                 showErrorAlert("Input Error", "Please enter a valid Supplier ID.");
@@ -812,6 +916,12 @@ public class ProductApp extends Application {
 
                 if (success) {
                     showInfoAlert("Success", "Supplier deleted successfully.");
+                    supplierIdField.clear();
+                    supplierNameField.clear();
+                    supplierContactField.clear();
+                    supplierPhoneField.clear();
+                    supplierEmailField.clear();
+                    supplierCityField.clear();
                 } else {
                     showErrorAlert("Delete Failed", "Supplier not found.");
                 }
@@ -888,6 +998,12 @@ public class ProductApp extends Application {
 
                 ClientDAO.updateClient(new Client(id, name, type, phone, city, credit));
                 showInfoAlert("Success", "Client updated successfully.");
+                clientIdField.clear();
+                clientNameField.clear();
+                clientTypeField.clear();
+                clientPhoneField.clear();
+                clientCityField.clear();
+                clientCreditField.clear();
 
             } catch (Exception ex) {
                 showErrorAlert("Input Error", "Please enter valid client values.");
@@ -902,6 +1018,12 @@ public class ProductApp extends Application {
 
                 if (success) {
                     showInfoAlert("Success", "Client deleted successfully.");
+                    clientIdField.clear();
+                    clientNameField.clear();
+                    clientTypeField.clear();
+                    clientPhoneField.clear();
+                    clientCityField.clear();
+                    clientCreditField.clear();
                 } else {
                     showErrorAlert("Delete Failed", "Client not found or linked to sale orders.");
                 }
@@ -1027,6 +1149,13 @@ public class ProductApp extends Application {
                 if (success) {
                     showInfoAlert("Success", "Employee deleted successfully.");
                     employeeIdField.clear();
+                    employeeIdField.clear();
+                    employeeFirstNameField.clear();
+                    employeeLastNameField.clear();
+                    employeeRoleField.clear();
+                    employeeHireDateField.clear();
+                    employeePhoneField.clear();
+                    employeeSalaryField.clear();
                 } else {
                     showErrorAlert("Delete Failed", "Employee not found or linked to orders/transactions.");
                 }
@@ -1104,6 +1233,32 @@ public class ProductApp extends Application {
                 );
             }
         });
+
+        updateSupplierProductButton.setOnAction(e -> {
+            try {
+                int supplierId = Integer.parseInt(spSupplierIdField.getText().trim());
+                int productId = Integer.parseInt(spProductIdField.getText().trim());
+                double unitCost = Double.parseDouble(spUnitCostField.getText().trim());
+
+                boolean success = SupplierProductDAO.updateSupplierProduct(
+                        new SupplierProduct(supplierId, productId, unitCost)
+                );
+
+                if (success) {
+                    showInfoAlert("Success", "Unit cost updated successfully.");
+
+                    spSupplierIdField.clear();
+                    spProductIdField.clear();
+                    spUnitCostField.clear();
+                } else {
+                    showErrorAlert("Update Failed", "Supplier-product link does not exist.");
+                }
+
+            } catch (Exception ex) {
+                showErrorAlert("Input Error", "Please enter valid supplier ID, product ID, and unit cost.");
+            }
+        });
+
         deleteSupplierProductButton.setOnAction(e -> {
 
             try {
@@ -1472,6 +1627,56 @@ public class ProductApp extends Application {
             }
         });
 
+        // ================= Inventory Transaction Actions =================
+
+        addTxnButton.setOnAction(e -> {
+            try {
+                InventoryTransaction t = new InventoryTransaction(
+                        Integer.parseInt(txnBatchIdField.getText().trim()),
+                        Integer.parseInt(txnEmployeeIdField.getText().trim()),
+                        txnTypeField.getText().trim(),
+                        Integer.parseInt(txnQuantityField.getText().trim()),
+                        Integer.parseInt(txnReferenceIdField.getText().trim())
+                );
+
+                boolean success = InventoryTransactionDAO.addTransaction(t);
+
+                if (success) {
+                    showInfoAlert("Success", "Inventory transaction added and stock updated.");
+
+                    txnBatchIdField.clear();
+                    txnEmployeeIdField.clear();
+                    txnTypeField.clear();
+                    txnQuantityField.clear();
+                    txnReferenceIdField.clear();
+                } else {
+                    showErrorAlert("Transaction Failed",
+                            "Transaction was not added. Check Batch ID, Employee ID, type, quantity, and available stock.");
+                }
+
+            } catch (Exception ex) {
+                showErrorAlert("Input Error", "Please enter valid transaction data.");
+            }
+        });
+
+        showTxnButton.setOnAction(e -> {
+            outputArea.clear();
+
+            for (InventoryTransaction t : InventoryTransactionDAO.getAllTransactions()) {
+                outputArea.appendText(
+                        "Txn ID: " + t.getTransactionId()
+                                + " | Batch: " + t.getBatchId()
+                                + " | Employee: " + t.getEmployeeId()
+                                + " | Type: " + t.getTxnType()
+                                + " | Qty: " + t.getQuantity()
+                                + " | Date: " + t.getTxnDate()
+                                + " | Ref: " + t.getReferenceId()
+                                + "\n"
+                );
+            }
+        });
+
+
         // ================= REPORT ACTIONS =================
         basicStatsButton.setOnAction(e -> {
             outputArea.clear();
@@ -1501,6 +1706,10 @@ public class ProductApp extends Application {
         paymentsSummaryButton.setOnAction(e -> {
             outputArea.clear();
             outputArea.setText(ReportDAO.getPaymentsSummary());
+        });
+        warehouseCapacityButton.setOnAction(e -> {
+            outputArea.clear();
+            outputArea.setText(ReportDAO.getWarehouseCapacityReport());
         });
 
         // ================= LAYOUT =================
@@ -1533,6 +1742,7 @@ public class ProductApp extends Application {
                 warehouseAddressField,
                 warehouseCityField,
                 warehousePhoneField,
+                warehouseCapacityField,
                 warehouseButtons,
 
                 new Separator(),
@@ -1648,6 +1858,16 @@ public class ProductApp extends Application {
                 paymentMethodField,
                 paymentDirectionField,
                 paymentButtons,
+
+                new Separator(),
+
+                new Label("Inventory Transaction Section"),
+                txnBatchIdField,
+                txnEmployeeIdField,
+                txnTypeField,
+                txnQuantityField,
+                txnReferenceIdField,
+                txnButtons,
 
                 new Separator(),
 

@@ -8,22 +8,25 @@ public class Warehouse {
     private String address;
     private String city;
     private String phone;
+    private int capacity;
 
     // reading from DB
-    public Warehouse(int id, String name, String address, String city, String phone) {
+    public Warehouse(int id, String name, String address, String city, String phone, int capacity) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.city = city;
         this.phone = phone;
+        this.capacity=capacity;
     }
 
     // adding new warehouse
-    public Warehouse(String name, String address, String city, String phone) {
+    public Warehouse(String name, String address, String city, String phone, int capacity) {
         this.name = name;
         this.address = address;
         this.city = city;
         this.phone = phone;
+        this.capacity=capacity;
     }
 
     public int getId() {
@@ -44,5 +47,8 @@ public class Warehouse {
 
     public String getPhone() {
         return phone;
+    }
+    public int getCapacity() {
+        return capacity;
     }
 }

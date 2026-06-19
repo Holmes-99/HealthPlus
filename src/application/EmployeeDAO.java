@@ -48,8 +48,8 @@ public class EmployeeDAO {
 
             String sql =
                     "INSERT INTO Employee " +
-                    "(FirstName, LastName, Role, HireDate, Phone, Salary) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+                            "(FirstName, LastName, Role, HireDate, Phone, Salary) " +
+                            "VALUES (?, ?, ?, ?, ?, ?)";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -79,8 +79,8 @@ public class EmployeeDAO {
 
             String sql =
                     "UPDATE Employee SET " +
-                    "FirstName=?, LastName=?, Role=?, HireDate=?, Phone=?, Salary=? " +
-                    "WHERE EmployeeID=?";
+                            "FirstName=?, LastName=?, Role=?, HireDate=?, Phone=?, Salary=? " +
+                            "WHERE EmployeeID=?";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 
