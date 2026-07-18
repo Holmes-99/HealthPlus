@@ -1,58 +1,94 @@
-# Health Plus - Warehouse Management System
+# 💊 Health Plus — Warehouse Management System
 
-A Java/JavaFX desktop application for managing a pharmaceutical warehouse. Built for the COMP333 Database Systems course at Birzeit University.
+![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white)
+![JavaFX](https://img.shields.io/badge/JavaFX-Desktop_UI-orange?style=flat)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
+![JDBC](https://img.shields.io/badge/JDBC-Data_Access-2E6DA4?style=flat)
+![Status](https://img.shields.io/badge/Status-Complete-3fb950?style=flat)
 
-## Project Overview
+> Java/JavaFX desktop app for running a pharmaceutical warehouse — COMP333 Database Systems course project @ Birzeit University 🇵🇸
 
-Health Plus digitizes the day-to-day operations of a pharmaceutical distributor: tracking products and batches across multiple warehouses, managing suppliers and purchase orders, taking client sale orders, recording payments, and giving admins a live dashboard of the business. The app is backed by a normalized MySQL schema and accessed through three role-specific JavaFX portals.
+---
 
-## Features
+## 📦 Overview
 
-Three user portals, gated behind a single login screen:
+Health Plus digitizes a pharmaceutical distributor's operations: products and batches across multiple warehouses, suppliers and purchase orders, client sale orders, payments, and a live admin dashboard. Backed by a 3NF-normalized MySQL schema and three role-specific JavaFX portals.
 
-- **Admin Portal** — full CRUD over every entity (categories, products, warehouses, batches, suppliers, clients, employees, supplier-product links, inventory transactions), a KPI dashboard with revenue/cost/stock charts, and a cart-style Purchase Order builder for restocking from suppliers.
-- **Employee Portal** — day-to-day operations scoped to the employee's assigned warehouse: approving and delivering sale orders, creating purchase orders, and receiving stock.
-- **Client Portal** — a shopping-cart experience for pharmacies/clinics to browse the product catalog, place sale orders, pay online, and track order history.
+---
 
-## Tech Stack
+## 🖥️ Features
 
-- **Java** (JDK 17+)
-- **JavaFX** — desktop UI toolkit
-- **MySQL** — relational database
-- **JDBC** — database connectivity (MySQL Connector/J)
+- 🔐 Single login screen, routed by role (Admin / Employee / Client)
+- 🛠️ **Admin Portal** — full CRUD on every entity via dropdown-driven forms (no typed-in IDs), KPI dashboard with revenue/cost/stock charts, cart-style Purchase Order builder
+- 👷 **Employee Portal** — warehouse-scoped sale order approval & delivery, purchase order creation, stock receiving
+- 🛒 **Client Portal** — shopping-cart UX: browse catalog, search/filter, place & pay for sale orders, track order history
+- 📅 Calendar date pickers throughout (no manual `yyyy-mm-dd` typing)
+- 📊 Canvas-drawn bar/pie charts for revenue, category sales, warehouse stock, top clients & products
 
-## Database
+---
 
-15 tables, normalized to 3NF: `Category`, `Product`, `Warehouse`, `Batch`, `Supplier`, `SupplierProduct`, `Client`, `Employee`, `PurchaseOrder`, `PurchaseOrderItem`, `SaleOrder`, `SaleOrderItem`, `Payment`, `InventoryTransaction`, `UserAccount`.
+## 🏗️ Architecture
 
-## How to Run
+| Layer | Tech | Role |
+|-------|------|------|
+| UI | JavaFX (Application, Scene, TabPane, TableView, Canvas) | Login screen + 3 portals |
+| Data access | JDBC + hand-written DAOs | One DAO per entity, plain SQL/PreparedStatement |
+| Database | MySQL, 15 tables, 3NF | `Category` · `Product` · `Warehouse` · `Batch` · `Supplier` · `SupplierProduct` · `Client` · `Employee` · `PurchaseOrder` · `PurchaseOrderItem` · `SaleOrder` · `SaleOrderItem` · `Payment` · `InventoryTransaction` · `UserAccount` |
+
+---
+
+## 📁 Project structure
+
+```
+src/application/
+├── Main.java                  Entry point → LoginScreen
+├── LoginScreen.java           Auth, routes to a portal by role
+├── DBConnection.java          Loads db.properties, opens JDBC connections
+├── ProductApp.java            Admin portal (all CRUD tabs + dashboard + charts)
+├── EmployeePortal.java        Employee portal
+├── ClientPortal.java          Client portal (shop / cart / orders / payments)
+│
+├── Batch.java · Category.java · Client.java · Employee.java
+├── InventoryTransaction.java · Payment.java · Product.java
+├── PurchaseOrder.java · PurchaseOrderItem.java · SaleOrder.java
+├── SaleOrderItem.java · Supplier.java · SupplierProduct.java
+├── UserAccount.java · Warehouse.java              Entity classes
+│
+└── *DAO.java                                       One DAO per entity
+```
+
+---
+
+## 🚀 Running locally
 
 **Requirements:** MySQL 8+, Java 17+, [JavaFX SDK](https://openjfx.io/) 17+.
 
-1. Create the `healthplus` database in MySQL and load the schema (see your course-provided SQL script / ER diagram).
-2. Copy the credentials template and fill in your own MySQL user/password:
-   ```
+1. Create the `healthplus` database in MySQL and load the schema (course-provided SQL script / ER diagram).
+2. Copy the credentials template and fill in your own MySQL user/password — it's gitignored, so nothing gets committed:
+   ```bash
    cp db.properties.example db.properties
    ```
-   Edit `db.properties`:
    ```properties
    db.url=jdbc:mysql://localhost:3306/healthplus?useSSL=false&serverTimezone=UTC
    db.user=root
    db.password=YOUR_PASSWORD_HERE
    ```
-   `db.properties` is gitignored — every developer keeps their own local copy, so no password is ever committed.
-3. Compile and run with the JavaFX SDK on the module path, e.g.:
+3. Compile & run with the JavaFX SDK on the module path:
+   ```bash
+   javac --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls \
+         -d out -cp mysql-connector-j.jar src/application/*.java
+
+   java --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls \
+        -cp "out;mysql-connector-j.jar" application.Main
    ```
-   javac --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls -d out -cp mysql-connector-j.jar src/application/*.java
-   java --module-path /path/to/javafx-sdk/lib --add-modules javafx.controls -cp "out;mysql-connector-j.jar" application.Main
-   ```
-   (Or open the project in IntelliJ IDEA with the JavaFX and MySQL Connector/J libraries attached, and run `Main`.)
+   Or open the project in IntelliJ IDEA with the JavaFX and MySQL Connector/J libraries attached and run `Main`.
 
-## Team
+---
 
-- Lara Daifallah — 1230239
-- Shatha Abualrub — 1231279
+## 👥 Team
 
-## Course
+**Lara Daifallah** (1230239) · **Shatha Abualrub** (1231279)
+COMP333 Database Systems · Dr. Bassem Sayrafi · Birzeit University 🇵🇸
 
-COMP333 — Database Systems, Dr. Bassem Sayrafi, Birzeit University.
+[![GitHub](https://img.shields.io/badge/GitHub-Holmes--99-181717?style=flat&logo=github)](https://github.com/Holmes-99)
+[![GitHub](https://img.shields.io/badge/GitHub-LaraDaifallah-181717?style=flat&logo=github)](https://github.com/LaraDaifallah)
