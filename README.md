@@ -37,6 +37,18 @@ Health Plus digitizes a pharmaceutical distributor's operations: products and ba
 
 ---
 
+## 📄 Documentation
+
+- 📘 [Project Report](docs/2_27_1230239_1231279.pdf) — full write-up: requirements, design decisions, and implementation notes
+- 🧬 [ER Diagram](docs/HealthPlus_ERD_1.drawio.png) ([alt export](docs/HealthPlus_ERD_2.png)) — full entity-relationship model behind the 15-table schema
+- 🔍 [Sample Queries](docs/Sample_Queries.md) — 20 annotated SQL queries covering inventory, procurement, sales, employees, payments, and reporting
+
+<p align="center">
+  <img src="docs/HealthPlus_ERD_1.drawio.png" alt="Health Plus ER Diagram" width="800">
+</p>
+
+---
+
 ## 📁 Project structure
 
 ```
