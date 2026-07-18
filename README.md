@@ -41,6 +41,7 @@ Health Plus digitizes a pharmaceutical distributor's operations: products and ba
 
 - 📘 [Project Report](docs/2_27_1230239_1231279.pdf) — full write-up: requirements, design decisions, and implementation notes
 - 🧬 [ER Diagram](docs/HealthPlus_ERD_1.drawio.png) ([alt export](docs/HealthPlus_ERD_2.png)) — full entity-relationship model behind the 15-table schema
+- 🗄️ [Schema + starter data](docs/schema.sql) — run this to create the `healthplus` database with all 15 tables and sample catalog data
 - 🔍 [Sample Queries](docs/Sample_Queries.md) — 20 annotated SQL queries covering inventory, procurement, sales, employees, payments, and reporting
 
 <p align="center">
@@ -75,7 +76,11 @@ src/application/
 
 **Requirements:** MySQL 8+, Java 17+, [JavaFX SDK](https://openjfx.io/) 17+.
 
-1. Create the `healthplus` database in MySQL and load the schema (course-provided SQL script / ER diagram).
+1. Load [`docs/schema.sql`](docs/schema.sql) into MySQL — it creates the `healthplus` database, all 15 tables, and starter catalog data:
+   ```bash
+   mysql -u root -p < docs/schema.sql
+   ```
+   This also seeds one bootstrap login (**User ID `1`, password `admin123`**, Admin role) so you can sign in immediately — change or replace it from the Admin ▸ Employees tab before any real deployment. No other accounts are seeded; create employee/client logins from the Admin portal's "Add + Create Account" buttons.
 2. Copy the credentials template and fill in your own MySQL user/password — it's gitignored, so nothing gets committed:
    ```bash
    cp db.properties.example db.properties
