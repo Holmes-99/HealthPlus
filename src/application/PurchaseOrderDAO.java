@@ -23,9 +23,7 @@ public class PurchaseOrderDAO {
 
             int rows = stmt.executeUpdate();
             conn.close();
-
             return rows > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -82,9 +80,7 @@ public class PurchaseOrderDAO {
 
             int rows = stmt.executeUpdate();
             conn.close();
-
             return rows > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -113,7 +109,6 @@ public class PurchaseOrderDAO {
 
                 list.add(item);
             }
-
             conn.close();
 
         } catch (Exception e) {

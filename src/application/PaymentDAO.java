@@ -78,7 +78,6 @@ public class PaymentDAO {
 
         return list;
     }
-
     public static boolean deletePayment(int id) {
         try {
             Connection conn = DBConnection.connect();

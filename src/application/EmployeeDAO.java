@@ -1,3 +1,4 @@
+//Group 27 | Lara Daifallah 1230239 & Shatha Abualrub 1231279
 package application;
 
 import java.sql.*;
@@ -19,6 +20,9 @@ public class EmployeeDAO {
 
             while (rs.next()) {
 
+                int wid = rs.getInt("WarehouseID");
+                Integer warehouseID = rs.wasNull() ? null : wid;
+
                 Employee e = new Employee(
                         rs.getInt("EmployeeID"),
                         rs.getString("FirstName"),
@@ -26,7 +30,8 @@ public class EmployeeDAO {
                         rs.getString("Role"),
                         rs.getString("HireDate"),
                         rs.getString("Phone"),
-                        rs.getDouble("Salary")
+                        rs.getDouble("Salary"),
+                        warehouseID
                 );
 
                 list.add(e);
@@ -48,8 +53,8 @@ public class EmployeeDAO {
 
             String sql =
                     "INSERT INTO Employee " +
-                            "(FirstName, LastName, Role, HireDate, Phone, Salary) " +
-                            "VALUES (?, ?, ?, ?, ?, ?)";
+                            "(FirstName, LastName, Role, HireDate, Phone, Salary, WarehouseID) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -59,6 +64,12 @@ public class EmployeeDAO {
             stmt.setString(4, e.getHireDate());
             stmt.setString(5, e.getPhone());
             stmt.setDouble(6, e.getSalary());
+
+            if (e.getWarehouseID() == null) {
+                stmt.setNull(7, Types.INTEGER);
+            } else {
+                stmt.setInt(7, e.getWarehouseID());
+            }
 
             int rows = stmt.executeUpdate();
 
@@ -79,7 +90,7 @@ public class EmployeeDAO {
 
             String sql =
                     "UPDATE Employee SET " +
-                            "FirstName=?, LastName=?, Role=?, HireDate=?, Phone=?, Salary=? " +
+                            "FirstName=?, LastName=?, Role=?, HireDate=?, Phone=?, Salary=?, WarehouseID=? " +
                             "WHERE EmployeeID=?";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -90,7 +101,14 @@ public class EmployeeDAO {
             stmt.setString(4, e.getHireDate());
             stmt.setString(5, e.getPhone());
             stmt.setDouble(6, e.getSalary());
-            stmt.setInt(7, e.getId());
+
+            if (e.getWarehouseID() == null) {
+                stmt.setNull(7, Types.INTEGER);
+            } else {
+                stmt.setInt(7, e.getWarehouseID());
+            }
+
+            stmt.setInt(8, e.getId());
 
             stmt.executeUpdate();
 
@@ -137,6 +155,9 @@ public class EmployeeDAO {
 
             if (rs.next()) {
 
+                int wid = rs.getInt("WarehouseID");
+                Integer warehouseID = rs.wasNull() ? null : wid;
+
                 Employee e = new Employee(
                         rs.getInt("EmployeeID"),
                         rs.getString("FirstName"),
@@ -144,7 +165,8 @@ public class EmployeeDAO {
                         rs.getString("Role"),
                         rs.getString("HireDate"),
                         rs.getString("Phone"),
-                        rs.getDouble("Salary")
+                        rs.getDouble("Salary"),
+                        warehouseID
                 );
 
                 conn.close();

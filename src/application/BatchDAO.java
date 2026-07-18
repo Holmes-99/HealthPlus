@@ -20,13 +20,9 @@ public class BatchDAO {
             while (rs.next()) {
 
                 Batch b = new Batch(
-                        rs.getInt("BatchID"),
-                        rs.getInt("ProductID"),
-                        rs.getInt("WarehouseID"),
-                        rs.getInt("QtyInStock"),
-                        rs.getString("ExpiryDate"),
-                        rs.getString("StorageLocation")
-                );
+                        rs.getInt("BatchID"), rs.getInt("ProductID"), rs.getInt("WarehouseID"),
+                        rs.getInt("QtyInStock"), rs.getString("ExpiryDate"),
+                        rs.getString("StorageLocation"));
 
                 list.add(b);
             }
@@ -36,10 +32,8 @@ public class BatchDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return list;
     }
-
     public static boolean addBatch(Batch b) {
 
         try {
@@ -76,13 +70,8 @@ public class BatchDAO {
             Connection conn = DBConnection.connect();
 
             String sql =
-                    "UPDATE Batch SET " +
-                            "ProductID = ?, " +
-                            "WarehouseID = ?, " +
-                            "QtyInStock = ?, " +
-                            "ExpiryDate = ?, " +
-                            "StorageLocation = ? " +
-                            "WHERE BatchID = ?";
+                    "UPDATE Batch SET " + "ProductID = ?, " + "WarehouseID = ?, " + "QtyInStock = ?, " +
+                            "ExpiryDate = ?, " + "StorageLocation = ? " + "WHERE BatchID = ?";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -130,12 +119,9 @@ public class BatchDAO {
             Connection conn = DBConnection.connect();
 
             String sql = "SELECT * FROM Batch WHERE BatchID = ?";
-
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
-
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
 
                 Batch b = new Batch(

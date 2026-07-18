@@ -24,9 +24,7 @@ public class SaleOrderDAO {
 
             int rows = stmt.executeUpdate();
             conn.close();
-
             return rows > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -57,7 +55,6 @@ public class SaleOrderDAO {
 
                 list.add(so);
             }
-
             conn.close();
 
         } catch (Exception e) {
@@ -84,9 +81,7 @@ public class SaleOrderDAO {
 
             int rows = stmt.executeUpdate();
             conn.close();
-
             return rows > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -110,8 +105,7 @@ public class SaleOrderDAO {
                         rs.getInt("BatchID"),
                         rs.getInt("QtyOrdered"),
                         rs.getDouble("UnitPrice"),
-                        rs.getDouble("Discount")
-                );
+                        rs.getDouble("Discount"));
 
                 list.add(item);
             }

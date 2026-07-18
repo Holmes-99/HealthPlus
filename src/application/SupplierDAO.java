@@ -22,9 +22,7 @@ public class SupplierDAO {
                         rs.getString("ContactPerson"),
                         rs.getString("Phone"),
                         rs.getString("Email"),
-                        rs.getString("City")
-                );
-
+                        rs.getString("City"));
                 list.add(s);
             }
 
@@ -72,7 +70,7 @@ public class SupplierDAO {
             stmt.setString(2, s.getContactPerson());
             stmt.setString(3, s.getPhone());
             stmt.setString(4, s.getEmail());
-            stmt.setString(5, s.getCity());
+            stmt.setString(5,s.getCity());
             stmt.setInt(6, s.getId());
 
             stmt.executeUpdate();
@@ -94,7 +92,7 @@ public class SupplierDAO {
             s1.close();
 
             String sql = "DELETE FROM Supplier WHERE SupplierID = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt =conn.prepareStatement(sql);
             stmt.setInt(1, id);
 
             int rows = stmt.executeUpdate();
@@ -108,9 +106,8 @@ public class SupplierDAO {
     }
 
     public static Supplier getSupplierById(int id) {
-        try {
+        try  {
             Connection conn = DBConnection.connect();
-
             String sql = "SELECT * FROM Supplier WHERE SupplierID = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
@@ -134,9 +131,7 @@ public class SupplierDAO {
             conn.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+            e.printStackTrace();}
         return null;
     }
 }

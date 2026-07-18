@@ -1,3 +1,4 @@
+//Group 27 | Lara Daifallah 1230239 & Shatha Abualrub 1231279
 package application;
 
 public class Employee {
@@ -9,10 +10,11 @@ public class Employee {
     private String hireDate;
     private String phone;
     private double salary;
+    private Integer warehouseID;
 
     public Employee(int id, String firstName, String lastName,
                     String role, String hireDate,
-                    String phone, double salary) {
+                    String phone, double salary, Integer warehouseID) {
 
         this.id = id;
         this.firstName = firstName;
@@ -21,11 +23,12 @@ public class Employee {
         this.hireDate = hireDate;
         this.phone = phone;
         this.salary = salary;
+        this.warehouseID = warehouseID;
     }
 
     public Employee(String firstName, String lastName,
                     String role, String hireDate,
-                    String phone, double salary) {
+                    String phone, double salary, Integer warehouseID) {
 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,6 +36,7 @@ public class Employee {
         this.hireDate = hireDate;
         this.phone = phone;
         this.salary = salary;
+        this.warehouseID = warehouseID;
     }
 
     public int getId() {
@@ -61,5 +65,9 @@ public class Employee {
 
     public double getSalary() {
         return salary;
+    }
+
+    public Integer getWarehouseID() {
+        return warehouseID;
     }
 }

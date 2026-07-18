@@ -1,8 +1,17 @@
 ### IntelliJ IDEA ###
+.idea/
+*.iml
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .kotlin
+
+### Java build output ###
+*.class
+target/
+
+### Local secrets ###
+db.properties
 
 ### Eclipse ###
 .apt_generated

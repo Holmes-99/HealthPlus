@@ -30,7 +30,6 @@ public class CategoryDAO {
         }
         return list;
     }
-    //add category
     public static void addCategory(Category c) {
         try {
             Connection conn=DBConnection.connect();
@@ -51,7 +50,6 @@ public class CategoryDAO {
             e.printStackTrace();
         }
     }
-    //update category 
     public static void updateCategory(Category c){
         try {
             Connection conn = DBConnection.connect();
@@ -69,14 +67,12 @@ public class CategoryDAO {
         }
     }
 
-    //delete by id
-    //delete category - remove supplier links first then delete
     public static boolean deleteCategory(int id) {
         System.out.println("deleteCategory called with id: " + id);
         try {
             Connection conn = DBConnection.connect();
 
-            // collect product IDs first into a list
+            // collect product ID
             ArrayList<Integer> productIds = new ArrayList<>();
             PreparedStatement s1 = conn.prepareStatement(
                     "SELECT ProductID FROM Product WHERE CategoryID = ?");
@@ -88,7 +84,7 @@ public class CategoryDAO {
             rs.close();
             s1.close();
 
-            // now delete supplier links for each product
+            // now delete supplier links
             for (int pid : productIds) {
                 PreparedStatement s2 = conn.prepareStatement(
                         "DELETE FROM SupplierProduct WHERE ProductID = ?");
@@ -103,7 +99,7 @@ public class CategoryDAO {
                 s3.close();
             }
 
-            // now delete the category - cascade handles products
+            // now delete the category
             PreparedStatement stmt = conn.prepareStatement(
                     "DELETE FROM Category WHERE CategoryID = ?");
             stmt.setInt(1, id);

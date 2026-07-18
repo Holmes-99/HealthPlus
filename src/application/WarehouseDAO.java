@@ -71,8 +71,9 @@ public class WarehouseDAO {
             stmt.setString(2, w.getAddress());
             stmt.setString(3, w.getCity());
             stmt.setString(4, w.getPhone());
-            stmt.setInt(5, w.getId());
             stmt.setInt(5, w.getCapacity());
+            stmt.setInt(6, w.getId());
+
 
 
             stmt.executeUpdate();

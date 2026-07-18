@@ -20,7 +20,6 @@ public class Warehouse {
         this.capacity=capacity;
     }
 
-    // adding new warehouse
     public Warehouse(String name, String address, String city, String phone, int capacity) {
         this.name = name;
         this.address = address;

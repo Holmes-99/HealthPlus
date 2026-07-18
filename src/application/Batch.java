@@ -9,7 +9,6 @@ public class Batch {
     private String expiryDate;
     private String storageLocation;
 
-    // reading from DB
     public Batch(int id, int productId, int warehouseId, int quantity,
                  String expiryDate, String storageLocation) {
 
@@ -21,7 +20,6 @@ public class Batch {
         this.storageLocation = storageLocation;
     }
 
-    // adding new batch
     public Batch(int productId, int warehouseId, int quantity,
                  String expiryDate, String storageLocation) {
 

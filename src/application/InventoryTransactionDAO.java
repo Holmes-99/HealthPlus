@@ -11,9 +11,7 @@ public class InventoryTransactionDAO {
         try {
             conn = DBConnection.connect();
             conn.setAutoCommit(false);
-
             int currentQty = 0;
-
             String selectSql = "SELECT QtyInStock FROM Batch WHERE BatchID = ?";
             PreparedStatement selectStmt = conn.prepareStatement(selectSql);
             selectStmt.setInt(1, t.getBatchId());
@@ -106,30 +104,22 @@ public class InventoryTransactionDAO {
         try {
             Connection conn = DBConnection.connect();
 
-            String sql = "SELECT * FROM InventoryTransaction";
+            String sql ="SELECT * FROM InventoryTransaction";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-
             while (rs.next()) {
-                InventoryTransaction t = new InventoryTransaction(
-                        rs.getInt("TransactionID"),
-                        rs.getInt("BatchID"),
-                        rs.getInt("EmployeeID"),
-                        rs.getString("TxnType"),
-                        rs.getInt("Quantity"),
-                        rs.getString("TxnDate"),
-                        rs.getInt("ReferenceID")
+                InventoryTransaction t = new InventoryTransaction(rs.getInt("TransactionID"), rs.getInt("BatchID"),
+                        rs.getInt("EmployeeID"), rs.getString("TxnType"), rs.getInt("Quantity"),
+                        rs.getString("TxnDate"), rs.getInt("ReferenceID")
                 );
 
                 list.add(t);
             }
-
             conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return list;
     }
 }

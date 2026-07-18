@@ -11,15 +11,12 @@ public class SupplierProduct {
         this.productId = productId;
         this.unitCost = unitCost;
     }
-
     public int getSupplierId() {
         return supplierId;
     }
-
     public int getProductId() {
         return productId;
     }
-
     public double getUnitCost() {
         return unitCost;
     }

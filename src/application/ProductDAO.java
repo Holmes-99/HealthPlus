@@ -37,7 +37,6 @@ public class ProductDAO {
         return list;
     }
 
-    // add product
     public static boolean addProduct(Product p) {
         try {
             Connection conn = DBConnection.connect();
@@ -64,7 +63,6 @@ public class ProductDAO {
         }
     }
 
-    // update product
     public static void updateProduct(Product p) {
         try {
             Connection conn = DBConnection.connect();
@@ -88,7 +86,6 @@ public class ProductDAO {
         }
     }
 
-    // delete product
     public static boolean deleteProduct(int id) {
         try {
             Connection conn = DBConnection.connect();
@@ -109,7 +106,6 @@ public class ProductDAO {
 
             int rowsAffected = stmt.executeUpdate();
             conn.close();
-
             return rowsAffected > 0;
 
         } catch (Exception e) {
@@ -125,7 +121,6 @@ public class ProductDAO {
             String sql = "SELECT * FROM Product WHERE ProductID = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
-
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -141,7 +136,6 @@ public class ProductDAO {
                 conn.close();
                 return p;
             }
-
             conn.close();
 
         } catch (Exception e) {
@@ -153,11 +147,9 @@ public class ProductDAO {
     public static boolean productExists(int id) {
         try {
             Connection conn = DBConnection.connect();
-
             String sql = "SELECT ProductID FROM Product WHERE ProductID = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
-
             ResultSet rs = stmt.executeQuery();
             boolean exists = rs.next();
 

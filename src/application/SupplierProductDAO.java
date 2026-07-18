@@ -54,9 +54,7 @@ public class SupplierProductDAO {
             stmt.setDouble(3, sp.getUnitCost());
 
             int rows = stmt.executeUpdate();
-
             conn.close();
-
             return rows > 0;
 
         } catch (Exception e) {
@@ -80,9 +78,7 @@ public class SupplierProductDAO {
             stmt.setInt(2, productId);
 
             int rows = stmt.executeUpdate();
-
             conn.close();
-
             return rows > 0;
 
         } catch (Exception e) {
@@ -105,9 +101,7 @@ public class SupplierProductDAO {
             stmt.setInt(3, sp.getProductId());
 
             int rows = stmt.executeUpdate();
-
             conn.close();
-
             return rows > 0;
 
         } catch (Exception e) {

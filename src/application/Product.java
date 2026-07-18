@@ -23,7 +23,6 @@ public class Product {
         this.categoryId = categoryId;
     }
 
-    // adding new product
     public Product(String name, String description,
                    double price, int reorderLevel,
                    int categoryId) {

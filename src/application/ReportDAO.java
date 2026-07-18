@@ -11,7 +11,7 @@ public class ReportDAO {
             Connection conn = DBConnection.connect();
             Statement stmt = conn.createStatement();
 
-            sb.append("===== BASIC STATISTICS =====\n\n");
+            sb.append("--basic statistics--\n\n");
 
             ResultSet rs;
 
@@ -67,11 +67,11 @@ public class ReportDAO {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            sb.append("===== LOW STOCK PRODUCTS =====\n\n");
+            sb.append("--- low stock products ---\n\n");
 
             while (rs.next()) {
                 sb.append(rs.getInt("ProductID")).append(" | ")
-                        .append(rs.getString("ProductName")).append(" | Qty: ")
+                        .append(rs.getString("ProductName")).append(" |Qty: ")
                         .append(rs.getInt("TotalQty")).append(" | Reorder Level: ")
                         .append(rs.getInt("ReorderLevel")).append("\n");
             }
@@ -101,13 +101,13 @@ public class ReportDAO {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            sb.append("===== BATCHES EXPIRING WITHIN 30 DAYS =====\n\n");
+            sb.append("--- batches expiring in 30 days --\n\n");
 
             while (rs.next()) {
                 sb.append("Batch ID: ").append(rs.getInt("BatchID"))
-                        .append(" | Product: ").append(rs.getString("ProductName"))
+                        .append(" |Product: ").append(rs.getString("ProductName"))
                         .append(" | Expiry: ").append(rs.getString("ExpiryDate"))
-                        .append(" | Qty: ").append(rs.getInt("QtyInStock"))
+                        .append(" |qty: ").append(rs.getInt("QtyInStock"))
                         .append("\n");
             }
 
@@ -138,7 +138,7 @@ public class ReportDAO {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            sb.append("===== STOCK VALUE BY CATEGORY =====\n\n");
+            sb.append("--- Stock value ---\n\n");
 
             while (rs.next()) {
                 sb.append(rs.getString("CategoryName"))
@@ -170,7 +170,7 @@ public class ReportDAO {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            sb.append("===== SALES SUMMARY =====\n\n");
+            sb.append("--- sales  ---\n\n");
 
             if (rs.next()) {
                 sb.append("Number of Sale Orders: ").append(rs.getInt("NumOrders")).append("\n");
@@ -201,7 +201,7 @@ public class ReportDAO {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            sb.append("===== PAYMENTS SUMMARY =====\n\n");
+            sb.append("---payrment---\n\n");
 
             while (rs.next()) {
                 sb.append(rs.getString("Direction"))
@@ -227,12 +227,9 @@ public class ReportDAO {
 
             String sql =
                     "SELECT w.WarehouseName, w.Capacity, " +
-                            "COALESCE(SUM(b.QtyInStock), 0) AS CurrentStock, " +
-                            "(w.Capacity - COALESCE(SUM(b.QtyInStock), 0)) AS RemainingCapacity, " +
-                            "CASE " +
-                            "WHEN w.Capacity = 0 THEN 0 " +
-                            "ELSE (COALESCE(SUM(b.QtyInStock), 0) / w.Capacity) * 100 " +
-                            "END AS UtilizationPercent " +
+                            "IFNULL(SUM(b.QtyInStock), 0) AS CurrentStock, " +
+                            "(w.Capacity - IFNULL(SUM(b.QtyInStock), 0)) AS RemainingCapacity, " +
+                            "IF(w.Capacity = 0, 0, (IFNULL(SUM(b.QtyInStock), 0) / w.Capacity) * 100) AS UtilizationPercent " +
                             "FROM Warehouse w " +
                             "LEFT JOIN Batch b ON w.WarehouseID = b.WarehouseID " +
                             "GROUP BY w.WarehouseID, w.WarehouseName, w.Capacity";
@@ -240,18 +237,18 @@ public class ReportDAO {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            sb.append("===== WAREHOUSE CAPACITY REPORT =====\n\n");
+            sb.append("---  REPORT ----\n\n");
 
             while (rs.next()) {
-                sb.append(rs.getString("WarehouseName"))
+                sb.append(rs.getString("warehouseName"))
                         .append(" | Capacity: ")
                         .append(rs.getInt("Capacity"))
-                        .append(" | Current Stock: ")
+                        .append(" | current Stock: ")
                         .append(rs.getInt("CurrentStock"))
                         .append(" | Remaining: ")
                         .append(rs.getInt("RemainingCapacity"))
-                        .append(" | Utilization: ")
-                        .append(String.format("%.2f", rs.getDouble("UtilizationPercent")))
+                        .append(" | utilization: ")
+                        .append(String.format("%.2f", rs.getDouble("utilizationPercent")))
                         .append("%\n");
             }
 
