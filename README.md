@@ -1,4 +1,4 @@
-# 💊 Health Plus — Warehouse Management System
+# 💊 Health Plus | Warehouse Management System
 
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white)
 ![JavaFX](https://img.shields.io/badge/JavaFX-Desktop_UI-orange?style=flat)
